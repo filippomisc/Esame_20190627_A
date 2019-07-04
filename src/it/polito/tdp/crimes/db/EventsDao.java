@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import it.polito.tdp.crimes.model.CoppieReati;
 import it.polito.tdp.crimes.model.Event;
 
 
@@ -183,6 +185,45 @@ public class EventsDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return 0 ;
+		}
+	}
+	
+	public List<CoppieReati> ListArchi(Integer anno, String categoria){
+		String sql = "select  count(distinct e2.district_id) as cnt, e1.offense_type_id as t1, e2.offense_type_id as t2 " + 
+				"from events e1, events e2 " + 
+				"where year(e1.reported_date)=year(e2.reported_date) " + 
+				"and year(e1.reported_date)=? " + 
+				"and e1.offense_category_id=e2.offense_category_id " + 
+				"and e1.offense_category_id=? " + 
+				"and e1.district_id=e2.district_id " + 
+				"and e1.offense_type_id<e2.offense_type_id " + 
+				"group by e1.offense_type_id, e2.offense_type_id";
+		try {
+			Connection conn = DBConnect.getConnection() ;
+
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			
+			st.setInt(1, anno);
+			st.setString(2, categoria);
+			
+			List<CoppieReati> list = new ArrayList<>() ;
+			
+			ResultSet res = st.executeQuery() ;
+			
+			while(res.next()) {
+				
+				
+					list.add(new CoppieReati(res.getString("t1"), res.getString("t2"),res.getInt("cnt")));
+					
+			
+			}
+			
+			conn.close();
+			return list ;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null ;
 		}
 	}
 

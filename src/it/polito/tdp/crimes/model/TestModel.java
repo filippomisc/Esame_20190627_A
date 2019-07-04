@@ -5,7 +5,7 @@ public class TestModel {
 	public static void main(String[] args) {
 		Model model=new Model();
 		
-		model.creaGrafo(2015, "other-crimes-against-persons");
+		model.creaGrafo(2014, "murder");
 		
 		
 	}

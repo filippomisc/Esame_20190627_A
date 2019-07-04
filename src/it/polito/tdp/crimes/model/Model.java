@@ -51,26 +51,31 @@ public void creaGrafo(Integer anno, String categoriaR) {
 	
 	this.vertici=dao.listTipoReati(anno, categoriaR);
 	Graphs.addAllVertices(graph, vertici);
-	System.out.println(vertici.size());
+	System.out.println("vertici creati: " + vertici.size());
 	
 	
-	for (String v1 : this.vertici) {
-		for (String v2 : this.vertici) {
-			if(!v1.equals(v2)){ 
-				if(this.graph.getEdge(v1, v2)==null){
-				
-			int distr1=dao.numDistretti(anno, categoriaR, v1);
-			int distr2=dao.numDistretti(anno, categoriaR, v2);
-			
-			if(distr1==distr2) {
-				Graphs.addEdge(this.graph, v1, v2, distr1);
-			
-			}
-			}
-			
-			
-			}
-		}
+//	for (String v1 : this.vertici) {
+//		for (String v2 : this.vertici) {
+//			if(!v1.equals(v2)){ 
+//				if(this.graph.getEdge(v1, v2)==null){
+//				
+//			int distr1=dao.numDistretti(anno, categoriaR, v1);
+//			int distr2=dao.numDistretti(anno, categoriaR, v2);
+//			
+//			if(distr1==distr2) {
+//				Graphs.addEdge(this.graph, v1, v2, distr1);
+//			
+//			}
+//			}
+//			
+//			
+//			}
+//		}
+//		
+//	}
+	
+	for ( CoppieReati cr: dao.ListArchi(anno, categoriaR)) {
+		Graphs.addEdge(this.graph, cr.getV1(), cr.getV2(), cr.getPeso());
 		
 	}
 	
@@ -84,9 +89,17 @@ public List<CoppieReati> trovaCoppieMax(){
 	Double count= 0.0;
 	for (DefaultWeightedEdge edge : this.graph.edgeSet()) {
 		
-		if(graph.getEdgeWeight(edge)>=count) {
-			resCoppieReatis.add(new CoppieReati(this.graph.getEdgeSource(edge),	this.graph.getEdgeTarget(edge)));
+		if(graph.getEdgeWeight(edge)>=count) {											
+			//resCoppieReatis.add(new CoppieReati(this.graph.getEdgeSource(edge),	this.graph.getEdgeTarget(edge), (int)this.graph.getEdgeWeight(edge)));//TODO appuntarsi il metodo per ricavare il peso in int dato edge 
 			count = graph.getEdgeWeight(edge);
+			
+			
+		}
+		
+		for (DefaultWeightedEdge edge1 : this.graph.edgeSet()) {
+			if((int)this.graph.getEdgeWeight(edge1)==count) {
+				resCoppieReatis.add(new CoppieReati(this.graph.getEdgeSource(edge),	this.graph.getEdgeTarget(edge), (int)this.graph.getEdgeWeight(edge)));//TODO appuntarsi il metodo per ricavare il peso in int dato edge 
+			}
 			
 			
 		}

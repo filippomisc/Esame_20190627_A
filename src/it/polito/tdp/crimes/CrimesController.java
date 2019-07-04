@@ -46,6 +46,7 @@ public class CrimesController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	
     	txtResult.clear();
     	txtResult.appendText("Crea grafo...\n");
     	Integer anno = this.boxAnno.getValue();
@@ -55,8 +56,7 @@ public class CrimesController {
     	
     	List<CoppieReati> list = this.model.trovaCoppieMax();
     	for (CoppieReati cr: list) {
-    		this.txtResult.appendText(cr.toString());
-			
+    		this.txtResult.appendText(cr.toString()+"\n");
 		}
     	
     }
